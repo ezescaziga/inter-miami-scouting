@@ -1,0 +1,1512 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:system-ui,sans-serif;background:#f4f4f2;}
+.wrap{border-radius:12px;overflow:hidden;border:1px solid #ddd;}
+.top-bar{height:5px;background:linear-gradient(90deg,#E0115F 0%,#C4973B 50%,#E0115F 100%);}
+.hdr{background:#111;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.hdr-title{color:white;font-size:15px;font-weight:800;}
+.hdr-sub{color:#666;font-size:10px;margin-top:2px;}
+.hdr-stats{display:flex;gap:16px;}
+.hs{text-align:center;}
+.hs-n{font-size:18px;font-weight:800;line-height:1;}
+.hs-l{color:#666;font-size:9px;letter-spacing:1px;text-transform:uppercase;}
+.main-tabs{background:white;padding:0 18px;display:flex;gap:0;border-bottom:2px solid #eee;overflow-x:auto;}
+.mtab{padding:10px 16px;font-size:12px;font-weight:700;color:#888;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;margin-bottom:-2px;transition:all .15s;}
+.mtab.active{color:#E0115F;border-bottom-color:#E0115F;}
+.mtab:hover{color:#E0115F;}
+.toolbar{background:white;padding:10px 18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #eee;}
+input.srch{flex:1;min-width:140px;padding:6px 12px;border:1px solid #ddd;border-radius:20px;font-size:12px;}
+input.srch:focus{outline:none;border-color:#E0115F;}
+select.flt{padding:6px 10px;border:1px solid #ddd;border-radius:20px;font-size:12px;cursor:pointer;max-width:200px;}
+select.flt:focus{outline:none;border-color:#E0115F;}
+.btn{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;border:none;}
+.btn-pink{background:#E0115F;color:white;}.btn-pink:hover{background:#c40f52;}
+.btn-dark{background:#111;color:white;}.btn-dark:hover{background:#333;}
+.pos-tabs{background:white;padding:0 18px;display:flex;gap:0;border-bottom:2px solid #eee;overflow-x:auto;}
+.ptab{padding:9px 14px;font-size:12px;font-weight:700;color:#888;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;margin-bottom:-2px;display:flex;align-items:center;gap:6px;transition:all .15s;}
+.ptab.active{color:#E0115F;border-bottom-color:#E0115F;}.ptab:hover{color:#E0115F;}
+.cpill{background:#eee;color:#888;font-size:9px;padding:1px 6px;border-radius:10px;}
+.ptab.active .cpill{background:#fde8f0;color:#E0115F;}
+.role-tabs{background:#f9f9f9;padding:6px 18px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee;}
+.rtab{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;cursor:pointer;border:1.5px solid #ddd;color:#666;background:white;transition:all .12s;}
+.rtab.active,.rtab:hover{border-color:#E0115F;color:#E0115F;background:#fff0f5;}
+.tbl-wrap{overflow-x:auto;min-height:180px;}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:650px;}
+thead tr{background:#222;}
+th{padding:8px 10px;text-align:left;font-size:9px;font-weight:700;color:#C4973B;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;cursor:pointer;}
+th:hover{color:#E0115F;}
+td{padding:7px 10px;border-bottom:1px solid #eee;vertical-align:middle;background:white;}
+tr:nth-child(even) td{background:#f9f9f9;}
+tr:hover td{background:#fde8f0;}
+.pname{font-weight:800;font-size:12px;}.psub{font-size:10px;color:#888;margin-top:1px;}
+.badge{padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;}
+.b-firmar{background:#E0115F;color:white;}
+.b-prio{background:#C4973B;color:white;}
+.b-gen{background:#777;color:white;}
+.inf-pill{background:#111;color:#C4973B;font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;}
+.liga-tag{background:#f0f0f0;color:#555;font-size:9px;padding:2px 6px;border-radius:8px;font-weight:600;margin-right:2px;}
+.act-btn{background:none;border:1px solid #ddd;border-radius:6px;padding:2px 7px;font-size:10px;color:#666;cursor:pointer;margin-right:3px;}
+.act-btn:hover{border-color:#E0115F;color:#E0115F;}
+.del-btn{background:none;border:none;color:#ddd;cursor:pointer;font-size:13px;}
+.del-btn:hover{color:#E0115F;}
+.empty-row td{text-align:center;padding:36px;color:#aaa;font-size:12px;}
+/* DASH */
+.dash-toolbar{background:#0f0f1a;padding:10px 18px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #333;}
+.dash-search{padding:6px 12px;border:1px solid #333;border-radius:20px;font-size:12px;background:#1a1a2e;color:white;width:200px;}
+.dash-search:focus{outline:none;border-color:#E0115F;}
+.dash-flt{padding:6px 10px;border:1px solid #333;border-radius:20px;font-size:12px;background:#1a1a2e;color:#ccc;cursor:pointer;}
+.liga-selector{padding:8px 18px;display:flex;gap:6px;flex-wrap:wrap;background:#0f0f1a;border-bottom:1px solid #222;}
+.liga-btn{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid #333;color:#888;background:#1a1a2e;transition:all .15s;white-space:nowrap;}
+.liga-btn.active{border-color:#E0115F;color:#E0115F;background:#2a0a15;}
+.liga-btn:hover{border-color:#C4973B;color:#C4973B;}
+.pitch-outer{padding:16px 24px;display:flex;justify-content:center;background:#1a1a2e;}
+.pitch{position:relative;width:100%;max-width:1000px;aspect-ratio:0.82;
+  background:linear-gradient(180deg,#2d5a1b 0%,#3a7a24 8.33%,#2d5a1b 8.33%,#2d5a1b 16.66%,#3a7a24 16.66%,#3a7a24 25%,#2d5a1b 25%,#2d5a1b 33.33%,#3a7a24 33.33%,#3a7a24 41.66%,#2d5a1b 41.66%,#2d5a1b 50%,#3a7a24 50%,#3a7a24 58.33%,#2d5a1b 58.33%,#2d5a1b 66.66%,#3a7a24 66.66%,#3a7a24 75%,#2d5a1b 75%,#2d5a1b 83.33%,#3a7a24 83.33%,#3a7a24 91.66%,#2d5a1b 91.66%);
+  border:2px solid rgba(255,255,255,0.4);border-radius:4px;}
+.pitch-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.float-card{position:absolute;background:white;border-radius:6px;overflow:hidden;box-shadow:0 4px 16px rgba(0,0,0,0.5);width:14%;}
+.fc-hdr{padding:4px 7px;font-size:8px;font-weight:800;letter-spacing:1px;color:white;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;}
+.fc-hdr:hover{filter:brightness(1.12);}
+.fc-badge{background:rgba(0,0,0,0.25);font-size:8px;padding:1px 5px;border-radius:8px;font-weight:700;}
+.fc-body{max-height:160px;overflow-y:auto;}
+.fc-body::-webkit-scrollbar{width:3px;}
+.fc-body::-webkit-scrollbar-thumb{background:#ddd;border-radius:3px;}
+.fc-row{display:flex;align-items:center;gap:3px;padding:2px 6px;border-top:1px solid #f0f0f0;}
+.fc-row.firmar{background:#fde8f0;}
+.fc-row.prio{background:#fdf6e8;}
+.fc-row.gen{background:#f8f8f8;}
+.fc-row.hidden-p{display:none;}
+.fc-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;}
+.fc-flag{font-size:10px;flex-shrink:0;}
+.fc-name{font-size:8.5px;font-weight:700;color:#111;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.fc-year{font-size:8px;color:#999;white-space:nowrap;}
+.fc-empty{padding:5px 7px;font-size:8px;color:#aaa;text-align:center;font-style:italic;}
+.collapsed .fc-body{display:none;}
+.dash-legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 18px;background:#0f0f1a;justify-content:center;border-top:1px solid #222;}
+.leg{display:flex;align-items:center;gap:5px;font-size:10px;color:#888;}
+.leg-dot{width:9px;height:9px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.2);}
+/* MODAL */
+.modal-bg{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);display:flex;align-items:center;justify-content:center;z-index:300;}
+.modal{background:white;border-radius:12px;padding:22px;width:540px;max-width:96vw;max-height:90vh;overflow-y:auto;}
+.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;}
+.modal-ttl{font-size:15px;font-weight:800;color:#111;}
+.modal-x{background:none;border:none;font-size:20px;cursor:pointer;color:#888;}
+.fg{display:flex;flex-direction:column;gap:4px;margin-bottom:10px;}
+.fl{font-size:10px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:1px;}
+.fi{padding:8px 10px;border:1px solid #ddd;border-radius:6px;font-size:12px;}
+.fi:focus{outline:none;border-color:#E0115F;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mfooter{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+.btn-cancel{background:#eee;color:#666;padding:8px 16px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;}
+.btn-save{background:#E0115F;color:white;padding:8px 18px;border-radius:8px;border:none;font-size:12px;font-weight:700;cursor:pointer;}
+.liga-checks{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.liga-check-item{display:flex;align-items:center;gap:5px;font-size:11px;cursor:pointer;}
+.liga-check-item input{accent-color:#E0115F;}
+.add-liga-row{display:flex;gap:6px;margin-top:8px;}
+.add-liga-inp{flex:1;padding:6px 10px;border:1px solid #ddd;border-radius:6px;font-size:11px;}
+.add-liga-btn{background:#111;color:white;border:none;border-radius:6px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer;}
+.bot-bar{height:4px;background:linear-gradient(90deg,#E0115F 0%,#C4973B 50%,#E0115F 100%);}
+</style>
+</head>
+<body>
+<div style="padding:0.5rem 0;">
+<div class="wrap">
+<div class="top-bar"></div>
+<div class="hdr">
+  <div><div class="hdr-title">⚽ Base de Datos · Scouting</div><div class="hdr-sub">Inter Miami CF — Departamento de Scouting</div></div>
+  <div class="hdr-stats">
+    <div class="hs"><div class="hs-n" id="cnt-total" style="color:#E0115F">0</div><div class="hs-l">Jugadores</div></div>
+    <div class="hs"><div class="hs-n" id="cnt-firmar" style="color:#E0115F">0</div><div class="hs-l">Firmar</div></div>
+    <div class="hs"><div class="hs-n" id="cnt-prio" style="color:#C4973B">0</div><div class="hs-l">Prioritarios</div></div>
+    <div class="hs"><div class="hs-n" id="cnt-gen" style="color:#777">0</div><div class="hs-l">Generales</div></div>
+  </div>
+</div>
+<div class="main-tabs">
+  <div class="mtab active" onclick="setMainTab('db')">📋 Base de datos</div>
+  <div class="mtab" onclick="setMainTab('dash')">🏟 Dashboard canchas</div>
+</div>
+
+<!-- DB -->
+<div id="section-db">
+  <div class="toolbar">
+    <input class="srch" id="search" placeholder="🔍  Buscar jugador..." oninput="renderTable()">
+    <select class="flt" id="flt-liga" onchange="renderTable()"><option value="">Todas las ligas</option></select>
+    <select class="flt" id="flt-nivel" onchange="renderTable()">
+      <option value="">Todos los niveles</option>
+      <option value="Firmar">⭐ Firmar</option>
+      <option value="Prioritario">🔶 Prioritario</option>
+      <option value="General">◽ General</option>
+    </select>
+    <button class="btn btn-pink" onclick="openModal()">+ Agregar</button>
+    <button class="btn btn-dark" onclick="exportCSV()">↓ CSV</button>
+  </div>
+  <div class="pos-tabs" id="pos-tabs"></div>
+  <div class="role-tabs" id="role-tabs"></div>
+  <div class="tbl-wrap">
+    <table><thead><tr>
+      <th onclick="sortBy('name')">Jugador ↕</th>
+      <th onclick="sortBy('year')">Año ↕</th>
+      <th onclick="sortBy('role')">Rol</th>
+      <th onclick="sortBy('nivel')">Nivel ↕</th>
+      <th>Ligas</th>
+      <th>Informes</th>
+      <th>Acc.</th>
+    </tr></thead><tbody id="tbl-body"></tbody></table>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="section-dash" style="display:none;">
+  <div class="dash-toolbar">
+    <input class="dash-search" id="dash-search" placeholder="🔍 Filtrar jugadores..." oninput="filterDash()">
+    <select class="dash-flt" id="dash-nivel" onchange="filterDash()">
+      <option value="">Todos los niveles</option>
+      <option value="Firmar">⭐ Firmar</option>
+      <option value="Prioritario">🔶 Prioritario</option>
+      <option value="General">◽ General</option>
+    </select>
+    <span style="color:#555;font-size:10px;margin-left:4px;">Clic en encabezado para colapsar tarjeta</span>
+  </div>
+  <div class="liga-selector" id="liga-selector"></div>
+  <div class="pitch-outer">
+    <div class="pitch" id="pitch">
+      <svg class="pitch-svg" viewBox="0 0 100 122" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="0" y1="61" x2="100" y2="61" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <circle cx="50" cy="61" r="9" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <circle cx="50" cy="61" r="0.8" fill="rgba(255,255,255,0.35)"/>
+        <rect x="22" y="0" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <rect x="22" y="104" width="56" height="18" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <rect x="35" y="0" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <rect x="35" y="115" width="30" height="7" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <path d="M 37 18 A 9 9 0 0 0 63 18" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <path d="M 37 104 A 9 9 0 0 1 63 104" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="0.4"/>
+        <rect x="40" y="-3" width="20" height="3" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+        <rect x="40" y="122" width="20" height="3" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="0.4"/>
+      </svg>
+      <div id="cards-container"></div>
+    </div>
+  </div>
+  <div class="dash-legend">
+    <div class="leg"><div class="leg-dot" style="background:#E0115F"></div>Firmar</div>
+    <div class="leg"><div class="leg-dot" style="background:#C4973B"></div>Prioritario</div>
+    <div class="leg"><div class="leg-dot" style="background:#777"></div>General</div>
+  </div>
+</div>
+<div class="bot-bar"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-bg" id="modal" style="display:none;">
+<div class="modal">
+  <div class="modal-hdr">
+    <div class="modal-ttl" id="modal-ttl">Agregar jugador</div>
+    <button class="modal-x" onclick="closeModal()">✕</button>
+  </div>
+  <div class="grid2">
+    <div class="fg"><label class="fl">Nombre *</label><input class="fi" id="f-name" placeholder="Nombre completo"></div>
+    <div class="fg"><label class="fl">Año *</label><input class="fi" id="f-year" type="number" placeholder="2003"></div>
+    <div class="fg"><label class="fl">País / Bandera</label><input class="fi" id="f-country" placeholder="🇦🇷 Argentina"></div>
+    <div class="fg"><label class="fl">Posición *</label>
+      <select class="fi" id="f-pos" onchange="updateRoles()">
+        <option value="">Seleccionar...</option>
+        <option value="GK">Goalkeeper</option>
+        <option value="DF">Defensor</option>
+        <option value="MF">Mediocampista</option>
+        <option value="FW">Delantero</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Rol *</label><select class="fi" id="f-role"><option value="">Primero elegí posición</option></select></div>
+    <div class="fg"><label class="fl">Nivel *</label>
+      <select class="fi" id="f-nivel">
+        <option value="Firmar">⭐ Firmar</option>
+        <option value="Prioritario">🔶 Prioritario</option>
+        <option value="General">◽ General</option>
+      </select>
+    </div>
+    <div class="fg"><label class="fl">Informes</label><input class="fi" id="f-informes" type="number" min="0" value="1"></div>
+    <div class="fg"><label class="fl">Link TM</label><input class="fi" id="f-tm" placeholder="https://transfermarkt.com/..."></div>
+  </div>
+  <div class="fg"><label class="fl">Notas</label><textarea class="fi" id="f-notes" rows="2" placeholder="Observaciones..."></textarea></div>
+  <div class="fg">
+    <label class="fl">Dashboards de liga 🏟</label>
+    <div class="liga-checks" id="liga-checks"></div>
+    <div class="add-liga-row">
+      <input class="add-liga-inp" id="new-liga-inp" placeholder="Nueva liga (ej: Liga MX)">
+      <button class="add-liga-btn" onclick="addNewLiga()">+ Crear</button>
+    </div>
+  </div>
+  <div class="mfooter">
+    <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+    <button class="btn-save" onclick="savePlayer()">Guardar jugador</button>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+const ROLES={GK:["Goalkeeper"],DF:["Covering Centre Back","Aggressive Centre Back","Defensive LB / RB","Attacking LB / RB"],MF:["Number 6","Number 8","Number 10"],FW:["Outside Winger","Pocket Player / Winger","Striker"]};
+const POS_LABELS={GK:"GK",DF:"Defensores",MF:"Mediocampistas",FW:"Delanteros"};
+const POS_COLORS={GK:"#E87722",DF:"#1E5AA8",MF:"#2E7D32",FW:"#C62828"};
+const NIVEL_COLOR={Firmar:"#E0115F",Prioritario:"#C4973B",General:"#777"};
+const NIVEL_CLASS={Firmar:"firmar",Prioritario:"prio",General:"gen"};
+const LEVEL_ORDER={Firmar:0,Prioritario:1,General:2};
+
+const CARDS=[
+  {key:"lw-out",  role:"Outside Winger",         side:"L", label:"LW OUTSIDE",       color:"#C62828", l:"1%",  t:"1%"},
+  {key:"lw-pkt",  role:"Pocket Player / Winger", side:"L", label:"LW POCKET PLAYER", color:"#C62828", l:"1%",  t:"16%"},
+  {key:"st",      role:"Striker",                            label:"STRIKER",           color:"#C62828", l:"36%", t:"8%"},
+  {key:"rw-pkt",  role:"Pocket Player / Winger", side:"R", label:"RW POCKET PLAYER", color:"#C62828", l:"72%", t:"16%"},
+  {key:"rw-out",  role:"Outside Winger",         side:"R", label:"RW OUTSIDE",        color:"#C62828", l:"72%", t:"1%"},
+  {key:"n10",     role:"Number 10",                          label:"NUMBER 10",         color:"#2E7D32", l:"1%",  t:"34%"},
+  {key:"n8",      role:"Number 8",                           label:"NUMBER 8",          color:"#2E7D32", l:"36%", t:"34%"},
+  {key:"n6",      role:"Number 6",                           label:"NUMBER 6",          color:"#2E7D32", l:"72%", t:"34%"},
+  {key:"lb-att",  role:"Attacking LB / RB",      side:"L", label:"LB ATTACKING",      color:"#1E5AA8", l:"1%",  t:"53%"},
+  {key:"lcb-cov", role:"Covering Centre Back",   side:"L", label:"LCB COVERING",      color:"#1E5AA8", l:"25%", t:"53%"},
+  {key:"rcb-cov", role:"Covering Centre Back",   side:"R", label:"RCB COVERING",      color:"#1E5AA8", l:"50%", t:"53%"},
+  {key:"rb-att",  role:"Attacking LB / RB",      side:"R", label:"RB ATTACKING",      color:"#1E5AA8", l:"72%", t:"53%"},
+  {key:"lb-def",  role:"Defensive LB / RB",      side:"L", label:"LB DEFENSIVE",      color:"#1E5AA8", l:"1%",  t:"69%"},
+  {key:"lcb-agg", role:"Aggressive Centre Back",  side:"L", label:"LCB AGGRESSIVE",   color:"#1E5AA8", l:"25%", t:"69%"},
+  {key:"rcb-agg", role:"Aggressive Centre Back",  side:"R", label:"RCB AGGRESSIVE",   color:"#1E5AA8", l:"50%", t:"69%"},
+  {key:"rb-def",  role:"Defensive LB / RB",      side:"R", label:"RB DEFENSIVE",      color:"#1E5AA8", l:"72%", t:"69%"},
+  {key:"gk",      role:"Goalkeeper",                         label:"GOALKEEPER",        color:"#E87722", l:"36%", t:"84%"},
+];
+
+let players=[], ligas=["General"], activeLiga="General", activePos="ALL", activeRole="ALL", editingId=null, sortKey="nivel", sortAsc=true;
+
+const SEED=[
+{name:"Keegan Jelacic",year:2002,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Bozhidar Kraev",year:1997,country:"🇧🇬 Bulgaria",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"J. Brazete",year:2006,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:2},
+{name:"Trent Ostler",year:2002,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Marco Tilio",year:2001,country:"🇦🇺 Australia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Jaylan Pearman",year:2006,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:2},
+{name:"Max Caputo",year:2005,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:2},
+{name:"Alou Kuol",year:2001,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Max Mata",year:2000,country:"🇳🇿 Nueva Zelanda",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"T. Waddingham",year:2005,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:3},
+{name:"O. Priestman",year:2003,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:4},
+{name:"R. Bozinovski",year:2004,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:3},
+{name:"S. Klein",year:2004,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:5},
+{name:"Lukas Kelly-Heald",year:2005,country:"🇦🇺 Australia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:2},
+{name:"Luke Amos",year:1997,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Louis Verstraete",year:1999,country:"🇧🇪 Bélgica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Isaac Hughes",year:2004,country:"🇦🇺 Australia",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Kai Trewin",year:2001,country:"🇦🇺 Australia",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Jordan Courtney",year:2002,country:"🇦🇺 Australia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia","Superliga Dinamarca"],informes:2},
+{name:"Alex Bonetig",year:2002,country:"🇦🇺 Australia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"P. Beach",year:2003,country:"🇦🇺 Australia",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Alex Paulsen",year:2002,country:"🇦🇺 Australia",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"B. Caicedo",year:2005,country:"🇪🇨 Ecuador",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:3},
+{name:"E. Pata",year:2004,country:"🇪🇨 Ecuador",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:5},
+{name:"D. Guagua",year:2007,country:"🇪🇨 Ecuador",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:5},
+{name:"Jeremy Mejia",year:2006,country:"🇪🇨 Ecuador",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:3},
+{name:"Justin Cuero",year:2004,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:3},
+{name:"Sergio Vasquez",year:2004,country:"🇪🇨 Ecuador",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:5},
+{name:"P. Mercado",year:2003,country:"🇪🇨 Ecuador",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:6},
+{name:"L. Loor",year:2001,country:"🇪🇨 Ecuador",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:3},
+{name:"Ariel Mina",year:2003,country:"🇪🇨 Ecuador",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:2},
+{name:"Daniel De La Cruz",year:2004,country:"🇪🇨 Ecuador",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:5},
+{name:"Carlos Medina",year:2001,country:"🇪🇨 Ecuador",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:5},
+{name:"Eugenio Raggio",year:2001,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:2},
+{name:"L. Zarate",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:1},
+{name:"Edilson Cabeza",year:2002,country:"🇪🇨 Ecuador",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:2},
+{name:"L. Cepeda",year:2002,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"R. Godoy",year:2005,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"Lucas Assadi",year:2004,country:"🇨🇱 Chile",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"Felipe Mendez",year:1999,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"A. Zayas",year:2001,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:5},
+{name:"Tomas Alarcon",year:1999,country:"🇨🇱 Chile",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"V. Pizarro",year:2002,country:"🇨🇱 Chile",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"Diego Ulloa",year:2003,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"Alexis Cantero",year:2003,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"S. Vegas",year:1996,country:"🇨🇱 Chile",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"Nahuel Brunet",year:2000,country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"V. Bernedo",year:2001,country:"🇨🇱 Chile",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"Beckham Castro",year:2003,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:4},
+{name:"Mauricio Gonzalez",year:2004,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:4},
+{name:"Marlon Balanta",year:2008,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:2},
+{name:"Brayan Leon",year:2000,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:6},
+{name:"S. Merheg",year:2006,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:3},
+{name:"Neiser Villarreal",year:2005,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:6},
+{name:"J. Enamorado",year:1999,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:3},
+{name:"J. Sarmiento",year:1999,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:5},
+{name:"N. Arevalo",year:2003,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:7},
+{name:"R. Pajaro",year:2002,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:4},
+{name:"Gustavo Charrupi",year:2004,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:3},
+{name:"Kener Gonzalez",year:2005,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:8},
+{name:"Julian Palacios",year:2003,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:3},
+{name:"H. Loboa",year:2006,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:2},
+{name:"Joan Escobar",year:2004,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:4},
+{name:"Adrian Carabali",year:2004,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:3},
+{name:"J. Mena",year:2004,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:5},
+{name:"J. Navia",year:2003,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:2},
+{name:"S. Velasquez",year:2003,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:3},
+{name:"J. Guerrero",year:2001,country:"🇺🇸 USA",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:3},
+{name:"J. Arias",year:2004,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:5},
+{name:"D. Palacios",year:2004,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Colombia","Liga Brasil"],informes:3},
+{name:"Jose Aragon",year:2003,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Colombia","Liga Brasil"],informes:3},
+{name:"Ferreira",year:1997,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:13},
+{name:"Vitinho",year:2002,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"Talles Magno",year:2002,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"Vinicius Pereira",year:2004,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:3},
+{name:"Matheus Martins",year:2003,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:2},
+{name:"G. Prado",year:2005,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:4},
+{name:"Beckham Castro BR",year:2003,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:5},
+{name:"Biel",year:2001,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:12},
+{name:"K. Serna",year:1997,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Brasil","Liga Colombia"],informes:14},
+{name:"A. Aravena",year:2002,country:"🇨🇱 Chile",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Chile"],informes:8},
+{name:"Pedrinho",year:2004,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:3},
+{name:"Kayke Ferrari",year:2004,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:2},
+{name:"Santiago Londono",year:2008,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Colombia"],informes:3},
+{name:"Y. Valois",year:2004,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Colombia"],informes:4},
+{name:"Lucas Ronier",year:2004,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Colombia"],informes:2},
+{name:"Frey Berrio",year:2007,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Colombia"],informes:3},
+{name:"M. Hinestroza",year:2002,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Colombia"],informes:5},
+{name:"Franco Cristaldo",year:1996,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:7},
+{name:"R. Zapeili",year:2002,country:"🇧🇷 Brasil",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:4},
+{name:"W. Hurtado",year:2004,country:"🇨🇴 Colombia",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Brasil","Liga Colombia"],informes:3},
+{name:"Denilson Alves B",year:2001,country:"🇧🇷 Brasil",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:7},
+{name:"Mandaca",year:2001,country:"🇧🇷 Brasil",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:5},
+{name:"Rodriguinho",year:2004,country:"🇧🇷 Brasil",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:7},
+{name:"Gabriel Bontempo",year:2005,country:"🇧🇷 Brasil",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:7},
+{name:"Filipinho",year:2001,country:"🇧🇷 Brasil",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:5},
+{name:"Joao Pedro",year:2005,country:"🇧🇷 Brasil",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:4},
+{name:"Johan Caicedo",year:2004,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Brasil","Liga Colombia"],informes:4},
+{name:"Matheus Cocke",year:2002,country:"🇧🇷 Brasil",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"N. Acevedo",year:1999,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:3},
+{name:"Hugo",year:1997,country:"🇧🇷 Brasil",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:5},
+{name:"Matheus Bidu",year:1999,country:"🇧🇷 Brasil",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"Lia Petit",year:2000,country:"🇧🇷 Brasil",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:11},
+{name:"Caca",year:1999,country:"🇧🇷 Brasil",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"Jemmes",year:2000,country:"🇧🇷 Brasil",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Brasil"],informes:4},
+{name:"Caique GK",year:1995,country:"🇧🇷 Brasil",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:2},
+{name:"Lucas Arcanjo",year:2004,country:"🇧🇷 Brasil",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"Mycael",year:2004,country:"🇧🇷 Brasil",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Brasil"],informes:1},
+{name:"Esteban Cruz",year:2005,country:"🇨🇷 Costa Rica",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Nyle Waugh",year:2006,country:"🇯🇲 Jamaica",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"R. Osorto",year:2006,country:"🇭🇳 Honduras",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Claudio Montero",year:2006,country:"🇨🇷 Costa Rica",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"D. Aguilar",year:2007,country:"🇸🇻 El Salvador",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Reid Jr.",year:2006,country:"🇯🇲 Jamaica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Julian Gonzalez",year:2005,country:"🇨🇷 Costa Rica",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Joseph Jones",year:2005,country:"🇯🇲 Jamaica",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:4},
+{name:"F. Faerron",year:2000,country:"🇨🇷 Costa Rica",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Karel Perez",year:2005,country:"🇨🇷 Costa Rica",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:2},
+{name:"R. Sakata",year:2004,country:"🇯🇵 Japon",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Yuki Soma",year:1997,country:"🇯🇵 Japon",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"A. Suzuki",year:2003,country:"🇯🇵 Japon",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Sho Fukuda",year:2001,country:"🇯🇵 Japon",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Rafael Elias",year:1999,country:"🇧🇷 Brasil",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Sota Kitano",year:2004,country:"🇯🇵 Japon",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Gaku Nawata",year:2006,country:"🇯🇵 Japon",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Z. Uno",year:2003,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Japón & Corea","Liga Brasil"],informes:1},
+{name:"Kaito Yasui",year:2000,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"S. Tanaka B",year:2002,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:4},
+{name:"R. Yamane",year:2003,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:3},
+{name:"Kodjo Aziangbe",year:2003,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:3},
+{name:"T. Hata",year:2002,country:"🇯🇵 Japon",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:4},
+{name:"Jae-Won Hwang",year:2002,country:"🇰🇷 Corea",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:3},
+{name:"Danilo JK",year:1998,country:"🇧🇷 Brasil",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Japón & Corea","Liga Brasil"],informes:5},
+{name:"Jun-Soo Byeon",year:2001,country:"🇰🇷 Corea",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"H. Araki",year:1996,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Japón & Corea"],informes:5},
+{name:"T. Nozawa",year:2002,country:"🇯🇵 Japon",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"M. Manhoef",year:2002,country:"🇳🇱 Paises Bajos",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Out of Market","Eredivisie"],informes:3},
+{name:"Cucho",year:1999,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Out of Market","MLS"],informes:1},
+{name:"Lucas Boye",year:1996,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Out of Market","Serie A Italia"],informes:3},
+{name:"Carlton Morris",year:1995,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Out of Market","Championship"],informes:1},
+{name:"Chuba Akpom",year:1995,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Out of Market","Championship"],informes:1},
+{name:"C. Ejuke",year:1998,country:"🇳🇬 Nigeria",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Out of Market","Serie A Italia"],informes:1},
+{name:"Javi Puado",year:1998,country:"🇪🇸 Espana",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Out of Market","La Liga"],informes:1},
+{name:"J. Sarmiento OOM",year:2002,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Out of Market","Eredivisie"],informes:2},
+{name:"Afonso Sousa",year:2000,country:"🇵🇹 Portugal",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Out of Market","Liga Portugal"],informes:3},
+{name:"I. Chair",year:1997,country:"🇲🇦 Marruecos",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Out of Market","Championship"],informes:2},
+{name:"G. Chakvetadze",year:1999,country:"🇬🇪 Georgia",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Out of Market","Eredivisie"],informes:2},
+{name:"Aleix Febas",year:1996,country:"🇪🇸 Espana",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Out of Market","La Liga"],informes:2},
+{name:"Junior Mwanga",year:2003,country:"🇫🇷 Francia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Out of Market","Ligue 1/2"],informes:2},
+{name:"Samba Diba",year:2003,country:"🇸🇳 Senegal",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Out of Market","Liga Bélgica","Ligue 1/2"],informes:3},
+{name:"Hamzat Ojediran",year:2003,country:"🇳🇬 Nigeria",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Out of Market","Liga Bélgica"],informes:4},
+{name:"Andrew Irving",year:2000,country:"🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Out of Market","Liga Bélgica"],informes:4},
+{name:"O. Repka",year:1999,country:"🇨🇿 Rep. Checa",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Out of Market","Liga Bélgica"],informes:4},
+{name:"Marvel",year:2003,country:"🇮🇱 Israel",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Out of Market","Liga Bélgica"],informes:3},
+{name:"Ghislain Konan",year:1995,country:"🇨🇮 Costa de Marfil",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Out of Market","Liga Bélgica"],informes:3},
+{name:"Connor Roberts",year:1995,country:"🌍 Gales",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Out of Market","Championship"],informes:1},
+{name:"D. Duarte",year:1995,country:"🇵🇹 Portugal",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Out of Market","La Liga"],informes:9},
+{name:"Carl Starfelt",year:1995,country:"🇸🇪 Suecia",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Out of Market","La Liga"],informes:1},
+{name:"Justin De Haas",year:2000,country:"🇳🇱 Paises Bajos",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Out of Market","Eredivisie"],informes:5},
+{name:"Ethan Horvath",year:1995,country:"🇺🇸 USA",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Out of Market","Championship"],informes:3},
+{name:"Jokin Ezkieta",year:1996,country:"🇪🇸 Espana",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Out of Market","La Liga"],informes:2},
+{name:"Rodrigo Rey",year:1991,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"G. Herrera",year:1992,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:7},
+{name:"O. Gill",year:2000,country:"🇵🇾 Paraguay",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"F. Petroli",year:1998,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"F. Zenobio",year:2000,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:5},
+{name:"T. Marchiori",year:1995,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"F. Sanguinetti",year:2001,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"M. Roffo",year:2000,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"Juan Pablo Cozzani",year:1998,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Edwuin Cetre",year:1998,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"S. Villa",year:1996,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Rick",year:1999,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina","Liga Brasil"],informes:4},
+{name:"Brian Aguirre",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Kevin Zenon",year:2001,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"E. Zeballos",year:2002,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"M. Reali",year:1997,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:5},
+{name:"M. Meza",year:1992,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Santiago Montiel",year:2000,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Matias Abaldo",year:2004,country:"🇺🇾 Uruguay",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:6},
+{name:"J. Campaz",year:2000,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"T. Palacios",year:2001,country:"🇺🇾 Uruguay",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"T. Conechny",year:1998,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Jose Romero",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:4},
+{name:"Maher Carrizo",year:2006,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:6},
+{name:"F. Colidio",year:2000,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Alejo Veliz",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Jeronimo Domina",year:2005,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Miguel Borja",year:1993,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Alan Velasco",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"E. Reynoso",year:1995,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Pity Martinez",year:1993,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"S. Driussi",year:1996,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Alan Lescano",year:2001,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:5},
+{name:"M. Lanzini",year:1993,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"L. Zelarayan",year:1992,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Agustin Ladstatter",year:2005,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"A. Martegani",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Gonzalo Abrego",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"J. Portilla",year:1998,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:4},
+{name:"E. Almendra",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:4},
+{name:"F. Loyola",year:2000,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"W. Alarcon",year:2000,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"T. O'Connor",year:2004,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"A. Cardozo",year:1997,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:7},
+{name:"I. Miramon",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Kevin Gutierrez",year:1997,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:5},
+{name:"S. Longo",year:1998,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:5},
+{name:"Joaquin Mosqueira",year:2004,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:6},
+{name:"M. Navarro",year:1999,country:"🇻🇪 Venezuela",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"L. Blanco",year:1999,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"M. Garay",year:1999,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"G. Martirena",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"L. Lozano",year:1998,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:4},
+{name:"N. Banegas",year:1996,country:"🇦🇷 Argentina",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"G. Benedetti",year:2001,country:"🇦🇷 Argentina",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:4},
+{name:"S. Arzamendia",year:1998,country:"🇵🇾 Paraguay",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Blas Riveros",year:1998,country:"🇵🇾 Paraguay",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:3},
+{name:"G. Montiel",year:1997,country:"🇦🇷 Argentina",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"G. Hernandez LCB",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Daniel Herrera",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Paulo Diaz",year:1994,country:"🇨🇱 Chile",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Martinez Quarta",year:1996,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"K. Lomonaco",year:2002,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:4},
+{name:"G. Conti",year:1994,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:2},
+{name:"Santiago Nunez",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Mariano Troilo",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"E. Unsain",year:1995,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Esteban Andrada",year:1991,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Pau Lopez",year:1994,country:"🇪🇸 Espana",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Kevin Mier",year:2000,country:"🇨🇴 Colombia",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Keylor Navas",year:1986,country:"🇨🇷 Costa Rica",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Andres Sanchez GK",year:1997,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"C. Acevedo",year:1996,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Raul Rangel",year:2000,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"D. Lainez",year:2000,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Jesus Angulo",year:1997,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"C. Rotondi",year:1997,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Bryan Gonzalez",year:2003,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"A. Zendejas",year:1998,country:"🇺🇸 USA",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:4},
+{name:"Uriel Antuna",year:1997,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"D. Valoyes",year:1996,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:6},
+{name:"J. Ruvalcaba",year:2001,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Hugo Camberos",year:2007,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Cade Cowell",year:2003,country:"🇺🇸 USA",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Alexis Vega",year:1997,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:5},
+{name:"Marcelo Flores",year:2003,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Lucas Ocampos",year:1994,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"E. Rigoni",year:1993,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Vitor Ferreira",year:1998,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Luka Romero",year:2004,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Ozziel Herrera",year:2001,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"G. Giakoumakis",year:1994,country:"🇬🇷 Grecia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"G. Berterame",year:1998,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"N. Ibanez",year:1994,country:"🇲🇽 Mexico",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"S. Rondon",year:1989,country:"🇻🇪 Venezuela",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Elias Montiel",year:2005,country:"🇲🇽 Mexico",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga México"],informes:4},
+{name:"S. Cordova",year:1997,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Juan Brunetta",year:1997,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Fran Villalba",year:1998,country:"🇪🇸 Espana",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"E. Alvarez N10",year:2002,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Iker Fimbres",year:2005,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:5},
+{name:"M. Bogusz",year:2001,country:"🇵🇱 Polonia",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"James MX",year:1991,country:"🇨🇴 Colombia",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"A. Fidalgo",year:1997,country:"🇪🇸 Espana",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"F. Gorriaran",year:1994,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Oliver Torres",year:1994,country:"🇪🇸 Espana",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"N. Deossa",year:2000,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Marcel Ruiz",year:2000,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Santiago Simon",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"E. Gutierrez N8",year:1995,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Fidel Ambriz",year:2003,country:"🇲🇽 Mexico",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"R. Dourado",year:1994,country:"🇧🇷 Brasil",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Jorge Rodriguez N6",year:1995,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Jose Caicedo MX",year:2002,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Erik Lira",year:2000,country:"🇲🇽 Mexico",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Juan Sanabria",year:2000,country:"🇺🇾 Uruguay",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"G. Arteaga",year:1998,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:4},
+{name:"Jesus Gallardo",year:1994,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Jorge Sanchez",year:1998,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Kevin Alvarez",year:1999,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Ruben Duarte",year:1995,country:"🇪🇸 Espana",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"I. Reyes",year:2000,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Nicolas Diaz CB",year:1999,country:"🇨🇱 Chile",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Bruno Mendez",year:1999,country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"M. Doria",year:1994,country:"🇧🇷 Brasil",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"B. Amione",year:2002,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"I. Lichnovsky",year:1994,country:"🇨🇱 Chile",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"D. Reyes AGG",year:1992,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:7},
+{name:"Willer Ditta",year:1998,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"S. Caceres",year:1999,country:"🇺🇾 Uruguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:4},
+{name:"A. Jungdal",year:2002,country:"🇩🇰 Dinamarca",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Mike Penders",year:2005,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"C. Bonsu",year:2004,country:"🇬🇭 Ghana",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"C. Tzolis",year:2002,country:"🇬🇷 Grecia",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Griffin Yow",year:2002,country:"🇺🇸 USA",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"T. Somers",year:1999,country:"🇧🇪 Belgica",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:3},
+{name:"Nikola Stulic",year:2001,country:"🇧🇦 Bosnia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Felipe Da Silva",year:2008,country:"🇧🇪 Belgica",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:2},
+{name:"Nacho Ferri",year:2004,country:"🇪🇸 Espana",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:2},
+{name:"Romeo Vermant",year:2004,country:"🇧🇪 Belgica",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Heymans",year:1999,country:"🇧🇪 Belgica",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:2},
+{name:"Paris Brunner",year:2006,country:"🇩🇪 Alemania",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Ardon Jashari",year:2002,country:"🇨🇭 Suiza",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Noah Sadiki",year:2004,country:"🌍 Congo",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Hakim Sahabo",year:2005,country:"🇧🇪 Belgica",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:2},
+{name:"Darko Gyabi",year:2004,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:3},
+{name:"N. Sattlberger",year:2004,country:"🌍 Austria",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"B. Heynen",year:1997,country:"🇧🇪 Belgica",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Maxim De Cuyper",year:2000,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"N. Mehssatou",year:2002,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Marlon Fossey",year:2001,country:"🇺🇸 USA",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"K. Mac Allister BEL",year:1997,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Matte Smets",year:2004,country:"🇧🇪 Belgica",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Ibe Hautekiet",year:2002,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"L. Vuskovic",year:2007,country:"🇭🇷 Croacia",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Joel Ordonez",year:2004,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Oliver Olsen",year:2000,country:"🇩🇰 Dinamarca",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:2},
+{name:"K. Velde",year:1999,country:"🇳🇴 Noruega",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Superliga Dinamarca","MLS"],informes:4},
+{name:"Vinko Rozic",year:2003,country:"🇭🇷 Croacia",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:2},
+{name:"R. Sottil",year:1999,country:"🇮🇹 Italia",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:3},
+{name:"Younes Bakiz",year:1999,country:"🇩🇰 Dinamarca",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:4},
+{name:"Abdoulie Manneh",year:2004,country:"🌍 Gambia",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:1},
+{name:"Tomas Suslov",year:2002,country:"🇸🇰 Eslovaquia",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Eredivisie"],informes:6},
+{name:"T. Jorgensen",year:2005,country:"🇩🇰 Dinamarca",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:4},
+{name:"Emil Kornvig",year:2000,country:"🇩🇰 Dinamarca",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:13},
+{name:"Z. Sertdemir",year:2005,country:"🇩🇰 Dinamarca",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:3},
+{name:"Niko Sigur",year:2003,country:"🇨🇦 Canada",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:1},
+{name:"Silas Andersen",year:2004,country:"🇩🇰 Dinamarca",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:2},
+{name:"M. Dietz",year:2002,country:"🇺🇸 USA",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:4},
+{name:"T. Chukwuani",year:2003,country:"🇩🇰 Dinamarca",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:3},
+{name:"B. Wdowik",year:2000,country:"🌍 Polonia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:2},
+{name:"V. Nogueira",year:2001,country:"🇧🇷 Brasil",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:5},
+{name:"Pedro Ganchas",year:2000,country:"🇵🇹 Portugal",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Liga Portugal"],informes:5},
+{name:"S. Jarl",year:2000,country:"🇩🇰 Dinamarca",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:3},
+{name:"Mads Bech",year:1999,country:"🇩🇰 Dinamarca",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Superliga Dinamarca"],informes:3},
+{name:"Ibrahim Sadiq",year:2000,country:"🇬🇭 Ghana",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Eliteserien Noruega"],informes:1},
+{name:"S. Nordli",year:1999,country:"🇳🇴 Noruega",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Eliteserien Noruega"],informes:3},
+{name:"Camilo Mena",year:2002,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Eliteserien Noruega"],informes:4},
+{name:"L. Johnsen",year:1999,country:"🇳🇴 Noruega",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Eliteserien Noruega"],informes:2},
+{name:"A. Roaldsoy",year:2004,country:"🇳🇴 Noruega",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Eliteserien Noruega"],informes:2},
+{name:"I. Buhari",year:2001,country:"🇳🇬 Nigeria",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Eliteserien Noruega"],informes:2},
+{name:"Maxwell Woledzi",year:2001,country:"🇬🇭 Ghana",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Eliteserien Noruega"],informes:4},
+{name:"Isac Lidberg",year:1998,country:"🇸🇪 Suecia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Allsvenskan Suecia"],informes:1},
+{name:"Adrian Svanback",year:2004,country:"🌍 Finlandia",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Allsvenskan Suecia"],informes:1},
+{name:"Markus Karlsson",year:2004,country:"🇸🇪 Suecia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Allsvenskan Suecia"],informes:3},
+{name:"Ludwig Thorell",year:2005,country:"🇸🇪 Suecia",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Allsvenskan Suecia"],informes:1},
+{name:"Fernandez BRiver",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Boston River vs Albion 2026"},
+{name:"Amado BRiver",year:"",country:"🇺🇾 Uruguay",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:2,notes:"Boston River vs Albion 2026"},
+{name:"Jaume Albion",year:"",country:"🇺🇾 Uruguay",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Boston River vs Albion 2026"},
+{name:"Sena Aguirre",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:1,notes:"Cerro vs Liverpool 2026"},
+{name:"Mederos Cerro",year:"",country:"🇺🇾 Uruguay",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:1,notes:"Cerro vs Liverpool 2026"},
+{name:"Degregorio Liverpool",year:"",country:"🇺🇾 Uruguay",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Cerro vs Liverpool 2026"},
+{name:"Agazzi Defensor",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:2,notes:"Defensor 2026 x2"},
+{name:"Caballero Defensor",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:5,notes:"Defensor 2026 x2"},
+{name:"Frugone Defensor",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Defensive LB / RB",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:3,notes:"Defensor 2026 x2"},
+{name:"Torterolo Defensor",year:"",country:"🇺🇾 Uruguay",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Defensor vs Cerro Largo 2026"},
+{name:"Barrios Defensor",year:"",country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:2,notes:"Defensor 2026 x2"},
+{name:"Biscayzacu Defensor",year:"",country:"🇺🇾 Uruguay",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:2,notes:"Defensor 2026 x2"},
+{name:"Mujica Juventud",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Juventud vs Central Espanol 2026"},
+{name:"Gonzalo Gomez Juventud",year:"",country:"🇺🇾 Uruguay",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:1,notes:"Juventud vs Central Espanol 2026"},
+{name:"Carroso Progreso",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Progreso vs Nacional 2026"},
+{name:"Bais Nacional",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Progreso vs Nacional 2026"},
+{name:"Boggio Nacional",year:"",country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Progreso vs Nacional 2026"},
+{name:"K. Martinez Nacional",year:"",country:"🇺🇾 Uruguay",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Progreso vs Nacional 2026"},
+{name:"Machado Racing UY",year:"",country:"🇺🇾 Uruguay",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:2,notes:"Racing vs Danubio 2026"},
+{name:"Manzur Racing UY",year:"",country:"🇺🇾 Uruguay",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Racing vs Danubio 2026. Gol"},
+{name:"Andrade Torque",year:"",country:"🇺🇾 Uruguay",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Uruguay"],informes:1,notes:"Torque vs Wanderers 2026. Asistencia"},
+{name:"Mencia Wanderers",year:"",country:"🇺🇾 Uruguay",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Uruguay"],informes:1,notes:"Torque vs Wanderers 2026"},
+{name:"Ramírez AAAJ",year:"",country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"AAAJ vs Sarmiento 2026"},
+{name:"Lescano AAAJ",year:"",country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"AAAJ vs Sarmiento 2026"},
+{name:"Porcel AAAJ",year:"",country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"AAAJ vs Sarmiento 2026"},
+{name:"Cortes Huracan",year:"",country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Banfield vs Huracán 2026"},
+{name:"Lucas Lamella",year:2009,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Gelp vs Union reserva 2026"},
+{name:"Lucas Cacciabue",year:"",country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Gelp vs Union reserva 2026"},
+{name:"Brian Croce",year:"",country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Gelp vs Union reserva 2026"},
+{name:"Nuñez Estudiantes",year:"",country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Independiente vs Estudiantes 2026"},
+{name:"Perez Estudiantes",year:"",country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Independiente vs Estudiantes 2026. Gol"},
+{name:"Luna Instituto",year:"",country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Instituto vs Velez 2026"},
+{name:"Perruzzi San Lorenzo",year:"",country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"San Lorenzo vs Lanus 2026"},
+{name:"Cuello San Lorenzo",year:"",country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"San Lorenzo vs Lanus 2026. 2 goles"},
+{name:"Galarza Talleres",year:"",country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1,notes:"Talleres vs Newell's 2026"},
+{name:"Acuna Newells",year:"",country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1,notes:"Talleres vs Newell's 2026"},
+{name:"Mesina Marruecos",year:"",country:"🇲🇦 Marruecos",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Marruecos vs Tanzania 2026"},
+{name:"Mwalimu Tanzania",year:"",country:"🇹🇿 Tanzania",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Marruecos vs Tanzania 2026"},
+{name:"Seri Costa de Marfil",year:"",country:"🇨🇮 Costa de Marfil",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Gabon vs Costa de Marfil 2026"},
+{name:"Diakite Costa de Marfil",year:"",country:"🇨🇮 Costa de Marfil",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Gabon vs Costa de Marfil 2026"},
+{name:"O. Appollis",year:"",country:"🇿🇦 Sudafrica",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026. Gol"},
+{name:"Zito Luvumbo",year:"",country:"🇦🇴 Angola",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026"},
+{name:"Gelson Dala",year:"",country:"🇦🇴 Angola",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026"},
+{name:"L. Herrera GK",year:2005,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"F. Cambeses",year:1997,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"L. Brey",year:2002,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"J. Burgos ARG",year:2004,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Lucas Janson",year:1994,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"M. Braida",year:1997,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Andino",year:2005,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"D. Aquino",year:2005,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Bryan Reyna",year:1998,country:"🇵🇪 Peru",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Diego Tarzia",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"F. Minerva",year:2006,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"Manuel Panaro",year:2002,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"D. Vergara ARG",year:1996,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"M. Godoy ARG",year:2002,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"L. Besozzi",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Matias Perello",year:2001,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"L. Sequeira",year:1995,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"V. Depietri",year:2000,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"J. Gho",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"A. Alaniz",year:2002,country:"🇺🇾 Uruguay",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"S. Solari",year:1998,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Fabricio Perez",year:2005,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"N. Oroz",year:1994,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Alan Sosa",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Juan Ramirez ARG",year:1993,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"A. Segovia",year:2004,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"M. Bajamich",year:1999,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"D. Porcel",year:2005,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"L. Gimenez ARG",year:2000,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"M. Gimenez ARG",year:1996,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"M. Coronel",year:1998,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"R. Castillo ARG",year:1999,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"A. Cuello",year:2000,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Gonzalo Morales",year:2003,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"J. Miritello",year:1999,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"F. Girotti",year:1999,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"M. Merentiel",year:1996,country:"🇺🇾 Uruguay",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"Dilan Godoy",year:2006,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"D. Herazo",year:1996,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"M. Miljevic",year:2001,country:"🇺🇸 USA",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Elias Cabrera",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"M. Moreno ARG",year:1995,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Argentina"],informes:1},
+{name:"Tomas Galvan",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Gonzalo Rios",year:1999,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Aaron Molinas",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"L. Cabral ARG",year:1995,country:"🇨🇱 Chile",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Damian Puebla",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Alex Luna ARG",year:2004,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Toloza",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"C. Palacios ARG",year:2000,country:"🇨🇱 Chile",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"F. Watson",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"L. Escalante",year:1999,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Javier Ruiz ARG",year:2004,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Tobias Leiva",year:2004,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Ascacibar",year:1997,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Argentina"],informes:4},
+{name:"C. Medina N8",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Argentina"],informes:5},
+{name:"I. Gomez ARG",year:1997,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Adrian Sanchez ARG",year:1999,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"B. Merlini",year:1995,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Facundo Di Biasi",year:2005,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"David Sotelo",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"J. Saralegui",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"M. Galarza ARG",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"G. Heredia N8",year:2005,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"C. Perez N8",year:2002,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"N. Palavecino",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Mikel Amondarain",year:2005,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Lautaro Godoy",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"M. Rio",year:2001,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"E. Cecchini",year:1996,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Marcelo Esponda",year:2003,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"M. Delgado ARG",year:2005,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"N. Tripichio",year:1996,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Leonel Perez",year:2004,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Bruno Leyes",year:2001,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"Vicente Poggi",year:2002,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"L. Picco",year:1998,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"U. Ortegoza",year:1997,country:"🇨🇱 Chile",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"F. Navarro N6",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"F. Mac Allister",year:1995,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"J. Nardoni",year:2002,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga Argentina"],informes:2},
+{name:"K. Ortiz ARG",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"B. Zuculini",year:1993,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"G. Rostagno",year:2005,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"F. Juarez ARG",year:1998,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"R. Saravia",year:2000,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"B. Cufre",year:1996,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Liga Argentina"],informes:2},
+{name:"E. Pereyra",year:1999,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Brian Calderara",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Alejo Tabares",year:2001,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"T. Silva ARG",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Marcich",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"I. Guerrico",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"J. Moran",year:2006,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Juan Villalba",year:2006,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Lucas Blondel",year:1996,country:"🇨🇭 Suiza",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"E. Herrera RB",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Liga Argentina"],informes:2},
+{name:"T. Guidara",year:1996,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"A. Montero ARG",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"J. Saborido",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"Alex Vigo",year:1999,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"R. Gomez RB",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Lautaro Vargas",year:2005,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Joel Godoy",year:2005,country:"🇦🇷 Argentina",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Facundo Mura",year:1999,country:"🇦🇷 Argentina",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Nahuel Arias ARG",year:2005,country:"🇦🇷 Argentina",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Lautaro Rivero",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:6},
+{name:"Aaron Quiros",year:2001,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"M. Brizuela",year:1997,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga Argentina"],informes:2},
+{name:"Leandro Quiroz",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Salcedo ARG",year:1997,country:"🇨🇱 Chile",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Mateo Mendoza",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"J. Portillo RCB",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"E. Mammana",year:1996,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"Jano Gordon",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Santiago Fernandez",year:2005,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Nicolas Figal",year:1994,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"N. Colombo",year:1999,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga Argentina"],informes:1},
+{name:"Marco Di Cesare",year:2002,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Daniel Zabala",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"F. Pardo RCB",year:1997,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"C. Ferreira RCB",year:2003,country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"F. Rasmussen",year:1992,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"Nicolas Meriano",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"E. Godoy",year:1993,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"F. Alvarez AGG",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Studer",year:2002,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"L. Costa AGG",year:1998,country:"🇺🇾 Uruguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"M. Mendia",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"L. Di Lollo",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"J. Romana",year:1998,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"K. Jappert",year:2004,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:4},
+{name:"J. Rodriguez AGG",year:1994,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"R. De Jesus",year:2001,country:"🇩🇴 Rep. Dominicana",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"L. Ferreira AGG",year:2000,country:"🇺🇾 Uruguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"S. Valdez ARG",year:1995,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:1},
+{name:"G. Requena",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:3},
+{name:"R. Giampaoli",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"R. Guth",year:2000,country:"🇧🇷 Brasil",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina","Superliga Dinamarca"],informes:1},
+{name:"Maizon Rodriguez",year:2003,country:"🇺🇾 Uruguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Argentina"],informes:2},
+{name:"Angel Malagon",year:1997,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"General",ligas:["General","Liga México"],informes:3},
+{name:"Alex Padilla",year:2003,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Andres Gudino",year:1997,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"C. Vargas GK",year:1989,country:"🇨🇴 Colombia",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Eduardo Garcia GK",year:2002,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Carlos Moreno GK",year:1998,country:"🇲🇽 Mexico",pos:"GK",role:"Goalkeeper",nivel:"General",ligas:["General","Liga México"],informes:2},
+{name:"S. Mele",year:1997,country:"🇺🇾 Uruguay",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"R. Fulgencio",year:2000,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Sebastian Saucedo",year:1997,country:"🇺🇸 USA",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Ramiro Sordo",year:2000,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Amaury Morales",year:2005,country:"🇲🇽 Mexico",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"G. Togni",year:1997,country:"🇦🇷 Argentina",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"I. Diaz MX",year:1997,country:"🇵🇦 Panama",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Yan Oliveira",year:2004,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Johan Rojas MX",year:2002,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Gael Alvarez",year:2006,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"V. Davila",year:1997,country:"🇨🇱 Chile",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga México"],informes:2},
+{name:"S. Mendoza MX",year:1992,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"G. Del Prete MX",year:1996,country:"🇦🇷 Argentina",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Angel Rico",year:2005,country:"🇲🇽 Mexico",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Henry Martin",year:1992,country:"🇲🇽 Mexico",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"L. Bonatini",year:1994,country:"🇧🇷 Brasil",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Paulinho MX",year:1992,country:"🇧🇷 Brasil",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"R. Funes Mori",year:1991,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga México"],informes:4},
+{name:"Jhonder Cadiz",year:1995,country:"🇻🇪 Venezuela",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Toro Fernandez MX",year:1994,country:"🇺🇾 Uruguay",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"R. De La Rosa",year:2000,country:"🇲🇽 Mexico",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"D. Cambindo MX",year:1996,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"D. Valdes N10",year:1994,country:"🇨🇱 Chile",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Sergio Canales",year:1991,country:"🇪🇸 Espana",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga México"],informes:5},
+{name:"Jordi Cortizo",year:1996,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"M. Klimowicz",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"D. Villalpando",year:1991,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"N. Benedetti MX",year:1997,country:"🇨🇴 Colombia",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"V. Guzman N10",year:1995,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"R. Pizarro MX",year:1994,country:"🇨🇱 Chile",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Kevin Castaneda",year:1999,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Ramiro Arciga",year:2004,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Gilberto Mora",year:2008,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:4},
+{name:"R. Bogarin",year:1997,country:"🇵🇾 Paraguay",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"P. Vite MX",year:2002,country:"🇪🇨 Ecuador",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Santiago Sandoval",year:2007,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Luis Najera",year:2003,country:"🇲🇽 Mexico",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Erick Sanchez",year:1999,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"F. Beltran",year:1998,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Sebastien Salles",year:1996,country:"🇫🇷 Francia",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"D. Blanco MX",year:1995,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"C. Rodriguez N8",year:1997,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"A. Palavecino MX",year:1996,country:"🇦🇷 Argentina",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"J. Marquez MX",year:2000,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Yael Padilla",year:2005,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:4},
+{name:"F. Boya",year:1996,country:"🇧🇪 Belgica",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"A. Carrasquilla",year:1998,country:"🇵🇦 Panama",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga México"],informes:2},
+{name:"Salvador Mariscal",year:2003,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Aldo Lopez MX",year:2000,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Angel Estrada",year:2003,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Aldahir Perez",year:2004,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Bernardo Parra",year:2005,country:"🇲🇽 Mexico",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"P. Aquino MX",year:1995,country:"🇵🇾 Paraguay",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"J. Gonzalez N6 MX",year:1999,country:"🇲🇽 Mexico",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"S. Naveda",year:2001,country:"🇲🇽 Mexico",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"R. Gonzalez N6 MX",year:1994,country:"🇲🇽 Mexico",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"F. Romero N6",year:2000,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Santiago Trigos",year:2002,country:"🇲🇽 Mexico",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"N. Fonseca MX",year:1998,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"F. Arce MX",year:1996,country:"🇺🇸 USA",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga México"],informes:3},
+{name:"F. Moyano MX",year:1997,country:"🇦🇷 Argentina",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Ariel Gamarra MX",year:2003,country:"🇵🇾 Paraguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Kevin Balanta MX",year:1997,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"S. Homenchenko",year:2003,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"H. Martinez N6 MX",year:1997,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Ralph Orquin",year:2003,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"Jesus Angulo LB",year:1998,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga México"],informes:1},
+{name:"C. Calderon MX",year:1997,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Jose Lozano MX",year:1998,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Ari Contreras",year:2005,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Mateo Chavez",year:2004,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Jonathan Perlaza",year:1997,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"A. Angulo MX",year:1997,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"A. Mozo",year:1997,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"G. Ferrareis",year:1996,country:"🇧🇷 Brasil",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Ivan Moreno MX",year:1998,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"R. Chavez MX",year:1994,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Miguel Gomez RB",year:2002,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Aaron Mejia MX",year:2001,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Jesus Garza MX",year:2000,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Ivan Gonzalez MX",year:2006,country:"🇲🇽 Mexico",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"C. Vargas LBD",year:1999,country:"🇲🇽 Mexico",pos:"DF",role:"Defensive LB / RB",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Ismael Govea",year:1997,country:"🇲🇽 Mexico",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"G. Piovi MX",year:1994,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Hector Ramirez MX",year:2004,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Everardo Lopez",year:2005,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Eduardo Aguila",year:2002,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"Angel Azuaje",year:2004,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"M. Tapias MX",year:1997,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Jorge Mere MX",year:1997,country:"🇪🇸 Espana",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"V. Guzman CB MX",year:2002,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"A. Santamaria MX",year:1992,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"G. Sepulveda MX",year:1999,country:"🇲🇽 Mexico",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga México"],informes:3},
+{name:"F. Almada MX",year:1998,country:"🇦🇷 Argentina",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:3},
+{name:"S. Olmedo",year:2001,country:"🇵🇾 Paraguay",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Jesus Orozco",year:2002,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Jesus Gomez CB MX",year:2002,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"E. Orona MX",year:1999,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"U. Bilbao MX",year:1994,country:"🇪🇸 Espana",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Adrian Mora",year:1997,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Paul Bellon",year:1997,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Samir Caetano",year:1994,country:"🇧🇷 Brasil",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"N. Araujo",year:1991,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"C. Salcedo",year:1993,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Lisandro Magallan",year:1993,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"Ramon Juarez",year:2001,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"M. Mosquera MX",year:2001,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:10},
+{name:"Nico Carrera",year:2002,country:"🇺🇸 USA",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga México"],informes:1},
+{name:"Raul Martinez AGG",year:2003,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"J. Porozo",year:2000,country:"🇪🇨 Ecuador",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"Franco Russo MX",year:1994,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga México"],informes:3},
+{name:"J. Fedorco MX",year:2000,country:"🇦🇷 Argentina",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:1},
+{name:"V. Gauthier",year:2003,country:"🇺🇾 Uruguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Oscar Ortega MX",year:2000,country:"🇲🇽 Mexico",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga México"],informes:2},
+{name:"Leo Kokubo",year:2001,country:"🇯🇵 Japon",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Emile Doucoure",year:2007,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"S. Lammens",year:2002,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"M. Epolo",year:2005,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"M. Delavallee",year:2004,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Warleson",year:1996,country:"🇧🇷 Brasil",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Tobe Leysen",year:2002,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"M. Verrips",year:1996,country:"🇳🇱 Paises Bajos",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"N. Jackers",year:1997,country:"🇧🇪 Belgica",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"P. Guiagon",year:2001,country:"🇫🇷 Francia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:2},
+{name:"O. Niang BEL",year:2001,country:"🇸🇳 Senegal",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Liga Bélgica"],informes:1},
+{name:"J. Steuckers",year:2002,country:"🇧🇪 Belgica",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Gyrano Kerk",year:1995,country:"🇳🇱 Paises Bajos",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Nilson Angulo",year:2003,country:"🇪🇨 Ecuador",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Sayyadmanesh BEL",year:2001,country:"🇮🇷 Iran",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Decorte",year:2006,country:"🇧🇪 Belgica",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Bertaccini",year:2000,country:"🇧🇪 Belgica",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"S. Ngoura",year:2005,country:"🇫🇷 Francia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Thierry Ambrose",year:1997,country:"🇫🇷 Francia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Matija Frigan",year:2003,country:"🇭🇷 Croacia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"T. Arokodare",year:2000,country:"🇳🇬 Nigeria",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"F. Ivanovic",year:2003,country:"🇷🇸 Serbia",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Vanzeir",year:1998,country:"🇧🇪 Belgica",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Mohamed Bayo",year:1998,country:"🇬🇳 Guinea",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Luis Vazquez BEL",year:2001,country:"🇦🇷 Argentina",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:2},
+{name:"Keisuke Goto",year:2005,country:"🇯🇵 Japon",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Eckert",year:1997,country:"🇩🇪 Alemania",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Hountondji",year:2002,country:"🇧🇯 Benin",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"C. Ikwuemesi",year:2001,country:"🇳🇬 Nigeria",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"B. Nsimba",year:2000,country:"🇧🇪 Belgica",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Scheidler BEL",year:1998,country:"🇫🇷 Francia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Andres Ferrari BEL",year:2003,country:"🇺🇾 Uruguay",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Promise David",year:2001,country:"🇨🇦 Canada",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Hyllarion Goore",year:2005,country:"🇳🇬 Nigeria",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Anan Khalaili",year:2004,country:"🇮🇱 Israel",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"C. Talbi",year:2005,country:"🇧🇪 Belgica",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Bernier BEL",year:1997,country:"🇧🇪 Belgica",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Vanwesemael",year:2002,country:"🇧🇪 Belgica",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Michel Balikwisha",year:2001,country:"🇧🇪 Belgica",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:2},
+{name:"A. Kadri BEL",year:2000,country:"🇩🇿 Argelia",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Kvet",year:1997,country:"🇨🇿 Rep. Checa",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Y. Maziz",year:1998,country:"🇫🇷 Francia",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:3},
+{name:"E. Henderson BEL",year:2000,country:"🏴󠁧󠁢󠁳󠁣󠁴󠁿 Escocia",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"O. Gandelman",year:2000,country:"🇮🇱 Israel",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"E. Banzuzi",year:2005,country:"🇳🇱 Paises Bajos",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Ito BEL",year:1998,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"M. Doumbia",year:2004,country:"🇨🇮 Costa de Marfil",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"J. Fujita",year:2002,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"C. Vanhoutte BEL",year:1998,country:"🇧🇪 Belgica",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"I. Bangoura",year:2004,country:"🇬🇳 Guinea",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Atsuki Ito",year:1998,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"L. Kuavita",year:2004,country:"🇧🇪 Belgica",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Y. Titraoui",year:2003,country:"🇩🇿 Argelia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:2},
+{name:"L. Agyekum",year:2003,country:"🇬🇭 Ghana",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Sissako",year:1998,country:"🇫🇷 Francia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Karim Dermane",year:2003,country:"🇹🇬 Togo",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"S. Schrijvers",year:1996,country:"🇧🇪 Belgica",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Haspolat",year:2000,country:"🇹🇷 Turquia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"M. Ashimeru",year:1997,country:"🇬🇭 Ghana",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:3},
+{name:"A. Zorgane",year:2000,country:"🇩🇿 Argelia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Abu Francis",year:2001,country:"🇬🇭 Ghana",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Manuel Osifo",year:2003,country:"🇧🇪 Belgica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"F. Hammar",year:2001,country:"🇸🇪 Suecia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"N. Rodes",year:1997,country:"🇧🇪 Belgica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"K. Van De Perre",year:2004,country:"🇧🇪 Belgica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"M. Delorge",year:2004,country:"🇧🇪 Belgica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Theo Leoni",year:2000,country:"🇧🇪 Belgica",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Flavio Nazinho",year:2003,country:"🇵🇹 Portugal",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Tiago Araujo BEL",year:2001,country:"🇵🇹 Portugal",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:2},
+{name:"T. Rommens",year:2003,country:"🇧🇪 Belgica",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Archie Brown",year:2002,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Olivier Deman",year:2000,country:"🇧🇪 Belgica",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"L. Augustinsson BEL",year:1994,country:"🇸🇪 Suecia",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"F. Ricca",year:1994,country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:3},
+{name:"Jose Marsa",year:2002,country:"🇪🇸 Espana",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Nathan Ngoy",year:2003,country:"🇧🇪 Belgica",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"I. Diakite BEL",year:2003,country:"🇨🇮 Costa de Marfil",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"H. Fujii BEL",year:2000,country:"🇯🇵 Japon",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Marco Kana",year:2002,country:"🇧🇪 Belgica",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"K. Machida BEL",year:1997,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"James Ndjeungoue",year:2003,country:"🇫🇷 Francia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"J. Torunarigha",year:1997,country:"🇳🇬 Nigeria",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Lucas Perrin BEL",year:1998,country:"🇫🇷 Francia",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"C. Ravych",year:2002,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"L. Dendoncker",year:1995,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"T. Watanabe BEL",year:1997,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Z. Van Den Bosch",year:2003,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Lucas Hey",year:2003,country:"🇩🇰 Dinamarca",pos:"DF",role:"Aggressive Centre Back",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Cheick Keita",year:2003,country:"🇫🇷 Francia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Dierckx",year:2003,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"S. Andreou BEL",year:2002,country:"🇨🇾 Chipre",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Edgaras Utkus",year:2000,country:"🇱🇹 Lituania",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Tsunoda BEL",year:1999,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Nyakossi",year:2004,country:"🇨🇭 Suiza",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"T. Raemaekers",year:2000,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"E. Bayram",year:2003,country:"🇹🇷 Turquia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Loic Mbe Soh",year:2001,country:"🇫🇷 Francia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"A. Konstantopoulos",year:2002,country:"🇬🇷 Grecia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Van Helden",year:2002,country:"🇧🇪 Belgica",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Mujaid Sadick",year:2000,country:"🇪🇸 Espana",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"B. Reynolds BEL",year:2001,country:"🇺🇸 USA",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"H. Lawrence BEL",year:2001,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"J. Petris",year:1998,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"G. Magnee BEL",year:1999,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"R. Belghali",year:2002,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"D. Hrncar",year:1997,country:"🇸🇰 Eslovaquia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Louis Patris",year:2001,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"K. Sabbe",year:2005,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Noah Fadiga",year:1999,country:"🇸🇳 Senegal",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"S. Renders",year:2007,country:"🇧🇪 Belgica",pos:"DF",role:"Attacking LB / RB",nivel:"Firmar",ligas:["General","Liga Bélgica"],informes:1},
+{name:"B. Plat",year:2000,country:"🇳🇱 Paises Bajos",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Bélgica"],informes:1},
+{name:"T. Vlietinck",year:1997,country:"🇧🇪 Belgica",pos:"DF",role:"Defensive LB / RB",nivel:"General",ligas:["General","Liga Bélgica"],informes:1},
+{name:"Ilyas Ansah",year:2004,country:"🇩🇪 Alemania",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Bundesliga"],informes:2},
+{name:"S. Nordli DAN",year:1999,country:"🇳🇴 Noruega",pos:"FW",role:"Pocket Player / Winger",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Eliteserien Noruega"],informes:3},
+{name:"Ragnar Ache",year:1998,country:"🇩🇪 Alemania",pos:"FW",role:"Striker",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Bundesliga"],informes:1},
+{name:"Labinot Bajrami",year:2005,country:"🇨🇭 Suiza",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Super League Suiza"],informes:1},
+{name:"John Dembe",year:2005,country:"🇪🇸 Espana",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","La Liga"],informes:2},
+{name:"Reo Hatate",year:1997,country:"🇯🇵 Japon",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Championship"],informes:1},
+{name:"Dejan Zukic",year:2001,country:"🇧🇦 Bosnia",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:1},
+{name:"Y. Suzuki DAN",year:2001,country:"🇯🇵 Japon",pos:"MF",role:"Number 10",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Bundesliga"],informes:5},
+{name:"Justin Lonwijk",year:1999,country:"🇳🇱 Paises Bajos",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Eredivisie"],informes:2},
+{name:"B. Keersmaecker",year:2000,country:"🇧🇪 Belgica",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Liga Bélgica"],informes:2},
+{name:"E. Leopold",year:2000,country:"🇩🇪 Alemania",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Bundesliga"],informes:5},
+{name:"Ryan Fosso",year:2002,country:"🇨🇭 Suiza",pos:"MF",role:"Number 8",nivel:"Firmar",ligas:["General","Superliga Dinamarca","Super League Suiza"],informes:3},
+{name:"Y. Oukili",year:2001,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Bundesliga"],informes:2},
+{name:"O. Rosengren",year:2003,country:"🇸🇪 Suecia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Allsvenskan Suecia"],informes:3},
+{name:"Markus Karlsson DAN",year:2004,country:"🇸🇪 Suecia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Allsvenskan Suecia"],informes:3},
+{name:"Jamie Roche",year:2001,country:"🇸🇪 Suecia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Allsvenskan Suecia"],informes:3},
+{name:"Kasper Davidsen",year:2005,country:"🇩🇰 Dinamarca",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Superliga Dinamarca"],informes:4},
+{name:"D. Murkin",year:1999,country:"🏴󠁧󠁢󠁥󠁮󠁧󠁿 Inglaterra",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Superliga Dinamarca","Championship"],informes:2},
+{name:"O. Bundgaard",year:2001,country:"🇩🇰 Dinamarca",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:1},
+{name:"L. Tomasson",year:2000,country:"🇮🇸 Islandia",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Superliga Dinamarca"],informes:3},
+{name:"L. Frenkert",year:2000,country:"🇩🇪 Alemania",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Bundesliga"],informes:2},
+{name:"Xavi Sintes",year:2001,country:"🇪🇸 Espana",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Superliga Dinamarca"],informes:2},
+{name:"M. Ceide",year:2001,country:"🇳🇴 Noruega",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Superliga Dinamarca","Eliteserien Noruega"],informes:4},
+{name:"L. Andrade NOR",year:1999,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Eliteserien Noruega"],informes:1},
+{name:"E. Stroud",year:2002,country:"🇸🇪 Suecia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Allsvenskan Suecia"],informes:2},
+{name:"C. Montes",year:2001,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"M. Mundaca",year:2007,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"E. Ramos",year:2005,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"L. Molina",year:2006,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"B. Chandia",year:2002,country:"🇨🇱 Chile",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"V. Aros",year:2007,country:"🇨🇱 Chile",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"I. Aliseda",year:2000,country:"🇺🇾 Uruguay",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"A. Uribe",year:1999,country:"🇨🇱 Chile",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"S. Rodriguez CHI",year:2000,country:"🇺🇾 Uruguay",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"Lucas Di Yorio",year:1996,country:"🇨🇱 Chile",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"Esteban Calderon",year:2004,country:"🇨🇱 Chile",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"I. Jeraldino",year:1995,country:"🇨🇱 Chile",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"D. Valencia CHI",year:2000,country:"🇨🇱 Chile",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"J. Rossel",year:2005,country:"🇨🇱 Chile",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"E. Moreira",year:2002,country:"🇨🇱 Chile",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"Ivan Franco",year:2000,country:"🇨🇱 Chile",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"M. Sepulveda",year:1999,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"L. Soto",year:2003,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"M. Zepeda",year:2004,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"M. Sandoval",year:2004,country:"🇨🇱 Chile",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"F. Montes",year:2004,country:"🇨🇱 Chile",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"A. Alvarez CHI",year:2001,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"N. Meza CHI",year:2002,country:"🇨🇱 Chile",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"A. Diaz CHI",year:2000,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"F. Yanez",year:2004,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"G. Norambuena",year:2003,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"Felipe Faundez",year:2006,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:4},
+{name:"N. Fernandez CHI",year:1999,country:"🇨🇱 Chile",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"D. Gutierrez CHI",year:2003,country:"🇨🇱 Chile",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"G. Guiffrey",year:1997,country:"🇺🇾 Uruguay",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:4},
+{name:"J. Villagra",year:2001,country:"🇨🇱 Chile",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:1},
+{name:"D. Gonzalez CHI",year:2002,country:"🇨🇱 Chile",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:2},
+{name:"R. Malanca",year:2003,country:"🇵🇾 Paraguay",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:4},
+{name:"V. Vidal CHI",year:2004,country:"🇨🇱 Chile",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Chile"],informes:3},
+{name:"Jhoner Salas",year:2003,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"S. Cuero",year:2004,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:5},
+{name:"Y. Quinones",year:2002,country:"🇨🇴 Colombia",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:6},
+{name:"J. Munoz COL",year:2002,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:1},
+{name:"P. Preciado",year:2005,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"Jorge Cabezas",year:2003,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"A. Morelos",year:1996,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga Colombia"],informes:6},
+{name:"Emilio Aristizabal",year:2005,country:"🇨🇴 Colombia",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga Colombia"],informes:7},
+{name:"C. Barrios COL",year:1998,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:1},
+{name:"J. Largacha",year:2004,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Liga Colombia"],informes:3},
+{name:"B. Castrillon",year:1999,country:"🇨🇴 Colombia",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"S. Navarro COL",year:2000,country:"🇨🇴 Colombia",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga Colombia"],informes:5},
+{name:"L. Sanchez COL",year:2000,country:"🇨🇴 Colombia",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"W. Hurtado COL",year:2004,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"S. Mayo",year:2003,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"J. Rivas",year:1997,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:6},
+{name:"D. Mendoza",year:2001,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:1},
+{name:"J. Zapata",year:2000,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"S. Ramirez COL",year:2006,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:3},
+{name:"J. Colorado",year:2001,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:3},
+{name:"A. Garcia COL",year:2001,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"Jose Mercado",year:2003,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"Y. Questero",year:2002,country:"🇨🇴 Colombia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:4},
+{name:"J. Campuzano",year:1996,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"Jose Cavaria",year:2005,country:"🇨🇴 Colombia",pos:"MF",role:"Number 6",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"J. Montano",year:2001,country:"🇨🇴 Colombia",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga Colombia"],informes:3},
+{name:"J. Balanta",year:1998,country:"🇨🇴 Colombia",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Liga Colombia"],informes:3},
+{name:"F. Chaverra",year:2000,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"Sander Navarro",year:2003,country:"🇨🇴 Colombia",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Liga Colombia"],informes:1},
+{name:"C. Romana",year:1999,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"J. Cardona",year:1999,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga Colombia"],informes:4},
+{name:"A. Alarcon COL",year:2001,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga Colombia"],informes:2},
+{name:"L. Chaverra",year:1997,country:"🇨🇴 Colombia",pos:"DF",role:"Defensive LB / RB",nivel:"General",ligas:["General","Liga Colombia"],informes:3},
+{name:"S. Martin COL",year:2006,country:"🇨🇴 Colombia",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:2},
+{name:"Juan Holguin",year:2005,country:"🇨🇴 Colombia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Colombia"],informes:1},
+{name:"A. Londono",year:2001,country:"🇨🇴 Colombia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:5},
+{name:"N. Caicedo",year:2003,country:"🇪🇨 Ecuador",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga Ecuador"],informes:2},
+{name:"Y. Vasquez",year:2006,country:"🇪🇨 Ecuador",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Liga Ecuador"],informes:2},
+{name:"J. Gomez ECU",year:2006,country:"🇪🇨 Ecuador",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga Ecuador"],informes:2},
+{name:"J. Valiente",year:2001,country:"🇺🇾 Uruguay",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Liga Ecuador"],informes:7},
+{name:"E. Munoz",year:2005,country:"🇪🇨 Ecuador",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Ecuador"],informes:2},
+{name:"Rooney Troya",year:2006,country:"🇪🇨 Ecuador",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Liga Ecuador"],informes:2},
+{name:"T. Santamaria ECU",year:2003,country:"🇦🇷 Argentina",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Ecuador"],informes:3},
+{name:"Yeltzin Enrique",year:2003,country:"🇪🇨 Ecuador",pos:"DF",role:"Defensive LB / RB",nivel:"General",ligas:["General","Liga Ecuador"],informes:5},
+{name:"D. Bagui",year:2005,country:"🇪🇨 Ecuador",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga Ecuador"],informes:3},
+{name:"Steeven Quinonez",year:2001,country:"🇪🇨 Ecuador",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Liga Ecuador"],informes:3},
+{name:"G. Villar ECU",year:1998,country:"🇦🇷 Argentina",pos:"GK",role:"Goalkeeper",nivel:"General",ligas:["General","Liga Ecuador"],informes:3},
+{name:"M. Grimaldi",year:2003,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Marlee Francois",year:2002,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"K. Rahmani",year:2006,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Miguel Di Pizio",year:2006,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"G. Sloane",year:2007,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:2},
+{name:"Mikael Doka",year:2000,country:"🇧🇷 Brasil",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"N. Milanovic",year:2001,country:"🇦🇺 Australia",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"D. Costa AUS",year:1990,country:"🇧🇷 Brasil",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"B. Brandtman",year:2005,country:"🇦🇺 Australia",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"G. May AUS",year:1998,country:"🇺🇾 Uruguay",pos:"FW",role:"Pocket Player / Winger",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"P. Klimala",year:1998,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Noah Botic",year:2002,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"A. De Lima AUS",year:2006,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"N. Duarte AUS",year:2003,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"M. Ruhs",year:2002,country:"🇦🇺 Australia",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"L. Vickery",year:2005,country:"🇺🇾 Uruguay",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"W. Freney",year:2005,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"Jake Hollman",year:2001,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia","Championship"],informes:1},
+{name:"A. Lopane",year:2004,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"W. Kamijo",year:2006,country:"🇦🇺 Australia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"M. Jakolic",year:1996,country:"🇸🇮 Eslovenia",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:2},
+{name:"Z. Schreiber",year:2005,country:"🇦🇺 Australia",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"L. Mauragis",year:2001,country:"🇦🇺 Australia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"K. Adamson",year:2003,country:"🇦🇺 Australia",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"N. Paull",year:2003,country:"🇦🇺 Australia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"N. Pijnaker",year:1999,country:"🇳🇱 Paises Bajos",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"L. Herrington",year:2007,country:"🇦🇺 Australia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:3},
+{name:"K. Majekodunmi",year:2004,country:"🇦🇺 Australia",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"C. Piper",year:2002,country:"🇦🇺 Australia",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"M. Sheridan",year:2004,country:"🇦🇺 Australia",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"D. Peraic-Cullen",year:2006,country:"🇦🇺 Australia",pos:"GK",role:"Goalkeeper",nivel:"Prioritario",ligas:["General","Liga Australia"],informes:1},
+{name:"K. Fujimoto",year:1998,country:"🇯🇵 Japon",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"Jae-Seok Yoon",year:2003,country:"🇰🇷 Corea",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:3},
+{name:"Jin-Woo Jeon",year:1999,country:"🇰🇷 Corea",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:1},
+{name:"Motoki Nishihara",year:2006,country:"🇯🇵 Japon",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:1},
+{name:"K. Tawaratsumida",year:2004,country:"🇯🇵 Japon",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:1},
+{name:"Y. Matsumura",year:2001,country:"🇯🇵 Japon",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"I. Someno",year:2001,country:"🇯🇵 Japon",pos:"FW",role:"Pocket Player / Winger",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"S. Yamada",year:2000,country:"🇯🇵 Japon",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"Kein Sato",year:2001,country:"🇯🇵 Japon",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Japón & Corea"],informes:3},
+{name:"Ho-Jae Lee",year:2000,country:"🇰🇷 Corea",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"A. Uenaka",year:2001,country:"🇯🇵 Japon",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Japón & Corea"],informes:4},
+{name:"T. Miki",year:1998,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"S. Kawasaki",year:2001,country:"🇯🇵 Japon",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"S. Tanaka",year:1997,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"H. Akiyama",year:2000,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:1},
+{name:"K. Okuni",year:2000,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"R. Watanabe",year:1996,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"K. Komasaka",year:2001,country:"🇯🇵 Japon",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"S. Higashi",year:2000,country:"🇯🇵 Japon",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"K. Kurokawa",year:1997,country:"🇯🇵 Japon",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"R. Handa",year:2002,country:"🇯🇵 Japon",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Tae-Seek Lee",year:2002,country:"🇰🇷 Corea",pos:"DF",role:"Defensive LB / RB",nivel:"General",ligas:["General","Japón & Corea"],informes:3},
+{name:"S. Nakano",year:2004,country:"🇯🇵 Japon",pos:"DF",role:"Defensive LB / RB",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"J. Sekigawa",year:2000,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Kosei Sawama",year:2003,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Japón & Corea"],informes:3},
+{name:"H. Trevisan",year:1997,country:"🇧🇷 Brasil",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"K. Mikami",year:2000,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"General",ligas:["General","Japón & Corea"],informes:3},
+{name:"S. Nakatani",year:1996,country:"🇯🇵 Japon",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"Y. Tsunashima",year:2000,country:"🇯🇵 Japon",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Japón & Corea"],informes:2},
+{name:"L. Thebault-Yamaguchi",year:1998,country:"🇯🇵 Japon",pos:"GK",role:"Goalkeeper",nivel:"General",ligas:["General","Japón & Corea"],informes:2},
+{name:"Takuma Asano",year:1994,country:"🇯🇵 Japon",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Out of Market","Bundesliga"],informes:1},
+{name:"D. Gassama",year:2003,country:"🇫🇷 Francia",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Out of Market","Ligue 1/2"],informes:1},
+{name:"Ze Carlos",year:1998,country:"🇧🇷 Brasil",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Out of Market","Liga Brasil"],informes:1},
+{name:"Ilan Kebbal",year:1998,country:"🇩🇿 Argelia",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Out of Market","Ligue 1/2"],informes:1},
+{name:"Nonoca",year:1998,country:"🇧🇷 Brasil",pos:"MF",role:"Number 6",nivel:"Prioritario",ligas:["General","Out of Market","Liga Bélgica"],informes:1},
+{name:"A. Soto",year:2003,country:"🇨🇷 Costa Rica",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Rodrigo Tello",year:2003,country:"🇬🇹 Guatemala",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Moises Garibaldo",year:2005,country:"🇸🇻 El Salvador",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Diefri Sandy",year:2004,country:"🇸🇻 El Salvador",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Isaac Castillo",year:2003,country:"🇸🇻 El Salvador",pos:"FW",role:"Outside Winger",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Doryan Rodriguez",year:2003,country:"🇨🇷 Costa Rica",pos:"FW",role:"Striker",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"C. Hernandez",year:2005,country:"🇨🇷 Costa Rica",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"A. Casanova",year:2005,country:"🇨🇷 Costa Rica",pos:"FW",role:"Striker",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:2},
+{name:"Dax Palmer",year:2007,country:"🇺🇸 USA",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Aaron Suarez",year:2002,country:"🇨🇷 Costa Rica",pos:"MF",role:"Number 10",nivel:"General",ligas:["General","Centroamérica"],informes:2},
+{name:"M. Camejo",year:2005,country:"🇨🇷 Costa Rica",pos:"MF",role:"Number 10",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:2},
+{name:"E. Carvajal",year:2004,country:"🇨🇷 Costa Rica",pos:"MF",role:"Number 8",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"B. Julian",year:2007,country:"🇸🇻 El Salvador",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"W. Ramirez",year:2007,country:"🇨🇷 Costa Rica",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"I. Lawrence",year:2002,country:"🇨🇷 Costa Rica",pos:"DF",role:"Attacking LB / RB",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Kevin Phillips",year:2004,country:"🇸🇻 El Salvador",pos:"DF",role:"Covering Centre Back",nivel:"General",ligas:["General","Centroamérica"],informes:1},
+{name:"Erick Diaz",year:2006,country:"🇨🇷 Costa Rica",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"F. Samadian",year:2005,country:"🇨🇷 Costa Rica",pos:"DF",role:"Aggressive Centre Back",nivel:"Prioritario",ligas:["General","Centroamérica"],informes:1},
+{name:"Y. Hodelin",year:2005,country:"🇨🇺 Cuba",pos:"GK",role:"Goalkeeper",nivel:"General",ligas:["General","Centroamérica"],informes:2},
+{name:"Oyono Gabon",year:"",country:"🇬🇦 Gabon",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga África"],informes:1,notes:"Gabon vs Costa de Marfil 2026"},
+{name:"Moucketou Gabon",year:"",country:"🇬🇦 Gabon",pos:"DF",role:"Covering Centre Back",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Gabon vs Costa de Marfil 2026"},
+{name:"Lemina Gabon",year:"",country:"🇬🇦 Gabon",pos:"MF",role:"Number 6",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Gabon vs Costa de Marfil 2026"},
+{name:"Averlant Gabon",year:"",country:"🇬🇦 Gabon",pos:"FW",role:"Outside Winger",nivel:"Firmar",ligas:["General","Liga África"],informes:1,notes:"Gabon vs Costa de Marfil 2026"},
+{name:"Mnoga Tanzania",year:"",country:"🇹🇿 Tanzania",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga África"],informes:1,notes:"Marruecos vs Tanzania 2026"},
+{name:"M. Nkota",year:"",country:"🇿🇦 Sudafrica",pos:"FW",role:"Outside Winger",nivel:"Prioritario",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026"},
+{name:"Kialonda Gaspar",year:"",country:"🇦🇴 Angola",pos:"DF",role:"Covering Centre Back",nivel:"Prioritario",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026"},
+{name:"Maestro Angola",year:"",country:"🇦🇴 Angola",pos:"MF",role:"Number 8",nivel:"Prioritario",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026"},
+{name:"Clinton Mata",year:"",country:"🇦🇴 Angola",pos:"DF",role:"Attacking LB / RB",nivel:"Prioritario",ligas:["General","Liga África"],informes:1,notes:"Sudafrica vs Angola 2026"}
+];
+
+function setMainTab(t){
+  document.getElementById("section-db").style.display=t==="db"?"":"none";
+  document.getElementById("section-dash").style.display=t==="dash"?"":"none";
+  document.querySelectorAll(".mtab").forEach((el,i)=>el.classList.toggle("active",[" db","dash"][i]===` ${t}`));
+  if(t==="dash")renderDash();
+}
+
+function renderPosTabs(){
+  const counts={ALL:players.length};
+  players.forEach(p=>{counts[p.pos]=(counts[p.pos]||0)+1;});
+  const ptabs=document.getElementById("pos-tabs");
+  const positions=["ALL","GK","DF","MF","FW"];
+  ptabs.innerHTML=positions.map(pos=>{
+    const label=pos==="ALL"?"Todos":POS_LABELS[pos]||pos;
+    const col=pos==="ALL"?"#E0115F":POS_COLORS[pos]||"#888";
+    const isActive=activePos===pos;
+    return`<div class="ptab ${isActive?"active":""}" onclick="setPos('${pos}')" style="${isActive?`color:${col};border-bottom-color:${col}`:""}">
+      <div class="ptab-dot" style="background:${col}"></div>${label}
+      <span class="cpill">${counts[pos]||0}</span></div>`;
+  }).join("");
+  renderRoleTabs();
+}
+
+function renderRoleTabs(){
+  const rtabs=document.getElementById("role-tabs");
+  if(activePos==="ALL"){rtabs.innerHTML="";return;}
+  const roles=ROLES[activePos]||[];
+  rtabs.innerHTML=[{role:"ALL",label:"Todos"},...roles.map(r=>({role:r,label:r}))].map(({role,label})=>{
+    const isA=activeRole===role;
+    return`<div class="rtab ${isA?"active":""}" onclick="setRole('${role.replace(/'/g,"\\'")}')"> ${label}</div>`;
+  }).join("");
+}
+
+function setPos(p){activePos=p;activeRole="ALL";renderTable();}
+function setRole(r){activeRole=r;renderTable();}
+
+function getFiltered(){
+  const q=(document.getElementById("search")||{}).value?.toLowerCase()||"";
+  const lg=(document.getElementById("flt-liga")||{}).value||"";
+  const nv=(document.getElementById("flt-nivel")||{}).value||"";
+  return players.filter(p=>{
+    if(activePos!=="ALL"&&p.pos!==activePos)return false;
+    if(activeRole!=="ALL"&&p.role!==activeRole)return false;
+    if(lg&&!(p.ligas||[]).includes(lg))return false;
+    if(nv&&p.nivel!==nv)return false;
+    if(q&&!`${p.name} ${p.country||""}`.toLowerCase().includes(q))return false;
+    return true;
+  }).sort((a,b)=>{
+    let va=a[sortKey]||"",vb=b[sortKey]||"";
+    if(sortKey==="nivel"){va=LEVEL_ORDER[va]??9;vb=LEVEL_ORDER[vb]??9;}
+    if(va<vb)return sortAsc?-1:1;if(va>vb)return sortAsc?1:-1;return 0;
+  });
+}
+function sortBy(k){if(sortKey===k)sortAsc=!sortAsc;else{sortKey=k;sortAsc=true;}renderTable();}
+
+function renderTable(){
+  const data=getFiltered();
+  const tbody=document.getElementById("tbl-body");
+  if(!tbody)return;
+  if(!data.length){tbody.innerHTML=`<tr class="empty-row"><td colspan="7">No hay jugadores. <span style="color:#E0115F;cursor:pointer;font-weight:700" onclick="openModal()">+ Agregar</span></td></tr>`;return;}
+  tbody.innerHTML=data.map(p=>{
+    const bc=p.nivel==="Firmar"?"b-firmar":p.nivel==="Prioritario"?"b-prio":"b-gen";
+    const tags=(p.ligas||[]).filter(l=>l!=="General").map(l=>`<span class="liga-tag">${l}</span>`).join("");
+    const tmLink=p.tm?`<a href="${p.tm}" target="_blank" class="act-btn" title="Transfermarkt">TM</a>`:"";
+    return`<tr>
+      <td><div class="pname">${p.name}</div><div class="psub">${p.country||""}${p.notes?` · <em style="color:#aaa">${p.notes}</em>`:""}</div></td>
+      <td>${p.year||""}</td>
+      <td><span style="font-size:9px;color:#C4973B;font-weight:600">${p.role||""}</span></td>
+      <td><span class="badge ${bc}">${p.nivel||""}</span></td>
+      <td>${tags||"—"}</td>
+      <td style="text-align:center"><span class="inf-pill">${p.informes||0}</span></td>
+      <td style="white-space:nowrap">
+        ${tmLink}<button class="act-btn" onclick="editPlayer(${JSON.stringify(p.id)})">✏</button>
+        <button class="del-btn" onclick="deletePlayer(${JSON.stringify(p.id)})">✕</button>
+      </td>
+    </tr>`;
+  }).join("");
+  renderPosTabs();
+}
+
+function renderAll(){updateStats();updateLigaFilter();renderTable();}
+
+function updateStats(){
+  document.getElementById("cnt-total").textContent=players.length;
+  document.getElementById("cnt-firmar").textContent=players.filter(p=>p.nivel==="Firmar").length;
+  document.getElementById("cnt-prio").textContent=players.filter(p=>p.nivel==="Prioritario").length;
+  document.getElementById("cnt-gen").textContent=players.filter(p=>p.nivel==="General").length;
+}
+function updateLigaFilter(){
+  const sel=document.getElementById("flt-liga");if(!sel)return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">Todas las ligas</option>'+ligas.map(l=>`<option value="${l}"${l===cur?" selected":""}>${l}</option>`).join("");
+}
+
+// SAVE / LOAD (localStorage)
+function saveAll(){
+  try{localStorage.setItem("im_players",JSON.stringify(players));localStorage.setItem("im_ligas",JSON.stringify(ligas));}catch(e){}
+}
+function load(){
+  try{
+    const sp=localStorage.getItem("im_players");
+    const sl=localStorage.getItem("im_ligas");
+    if(sp){players=JSON.parse(sp);}else{players=SEED.map((p,i)=>({...p,id:i+1}));}
+    if(sl){ligas=JSON.parse(sl);}else{
+      const ls=new Set(["General"]);
+      players.forEach(p=>(p.ligas||[]).forEach(l=>ls.add(l)));
+      ligas=[...ls];
+    }
+  }catch(e){players=SEED.map((p,i)=>({...p,id:i+1}));ligas=["General"];}
+  renderAll();
+}
+
+// DASHBOARD
+function renderDash(){
+  document.getElementById("liga-selector").innerHTML=ligas.map(l=>
+    `<div class="liga-btn ${activeLiga===l?"active":""}" onclick="setLiga('${l.replace(/'/g,"\\'").replace(/"/g,'\\"')}')">⚽ ${l}</div>`
+  ).join("");
+  renderCards();
+}
+function setLiga(l){activeLiga=l;renderDash();}
+
+function getCardPlayers(cd,all){
+  const same=all.filter(p=>p.role===cd.role);
+  const half=Math.ceil(same.length/2);
+  if(cd.side==="L")return same.slice(0,half);
+  if(cd.side==="R")return same.slice(half);
+  return same;
+}
+
+function renderCards(){
+  const cont=document.getElementById("cards-container");
+  cont.innerHTML="";
+  const all=players.filter(p=>(p.ligas||[]).includes(activeLiga));
+  const q=(document.getElementById("dash-search")||{}).value?.toLowerCase()||"";
+  const nv=(document.getElementById("dash-nivel")||{}).value||"";
+
+  CARDS.forEach(cd=>{
+    const rp=getCardPlayers(cd,all);
+    const card=document.createElement("div");
+    card.className="float-card";
+    card.style.cssText=`left:${cd.l};top:${cd.t};`;
+    card.id=`card-${cd.key}`;
+
+    const hdr=document.createElement("div");
+    hdr.className="fc-hdr";
+    hdr.style.background=cd.color;
+    hdr.innerHTML=`— ${cd.label} <span class="fc-badge">${rp.length}</span>`;
+    hdr.onclick=()=>card.classList.toggle("collapsed");
+    card.appendChild(hdr);
+
+    const body=document.createElement("div");
+    body.className="fc-body";
+    if(!rp.length){
+      body.innerHTML=`<div class="fc-empty">—</div>`;
+    } else {
+      const sorted=[...rp].sort((a,b)=>(LEVEL_ORDER[a.nivel]??9)-(LEVEL_ORDER[b.nivel]??9));
+      sorted.forEach(p=>{
+        const hidden=(q&&!`${p.name} ${p.country||""}`.toLowerCase().includes(q))||(nv&&p.nivel!==nv);
+        const row=document.createElement("div");
+        row.className=`fc-row ${NIVEL_CLASS[p.nivel]||"gen"}${hidden?" hidden-p":""}`;
+        row.dataset.name=`${p.name} ${p.country||""}`.toLowerCase();
+        row.dataset.nivel=p.nivel||"";
+        const flag=(p.country||"").split(" ")[0]||"";
+        row.innerHTML=`<div class="fc-dot" style="background:${NIVEL_COLOR[p.nivel]||"#777"}"></div>
+          <span class="fc-flag">${flag}</span>
+          <span class="fc-name">${p.name}</span>
+          <span class="fc-year">${p.year||""}</span>`;
+        body.appendChild(row);
+      });
+    }
+    card.appendChild(body);
+    cont.appendChild(card);
+  });
+}
+
+function filterDash(){
+  const q=(document.getElementById("dash-search")||{}).value?.toLowerCase()||"";
+  const nv=(document.getElementById("dash-nivel")||{}).value||"";
+  document.querySelectorAll(".fc-row").forEach(row=>{
+    const ok=(!q||row.dataset.name?.includes(q))&&(!nv||row.dataset.nivel===nv);
+    row.classList.toggle("hidden-p",!ok);
+  });
+  CARDS.forEach(cd=>{
+    const card=document.getElementById(`card-${cd.key}`);
+    if(!card)return;
+    const v=card.querySelectorAll(".fc-row:not(.hidden-p)").length;
+    const b=card.querySelector(".fc-badge");
+    if(b)b.textContent=v;
+  });
+}
+
+// MODAL
+function updateRoles(){
+  const pos=document.getElementById("f-pos").value;
+  const sel=document.getElementById("f-role");
+  if(!pos){sel.innerHTML='<option value="">Primero elegí posición</option>';return;}
+  sel.innerHTML=(ROLES[pos]||[]).map(r=>`<option value="${r}">${r}</option>`).join("");
+}
+function renderLigaChecks(sel=[]){
+  document.getElementById("liga-checks").innerHTML=ligas.map(l=>
+    `<label class="liga-check-item"><input type="checkbox" value="${l}" ${sel.includes(l)?"checked":""}> ${l}</label>`
+  ).join("");
+}
+function addNewLiga(){
+  const inp=document.getElementById("new-liga-inp");
+  const val=inp.value.trim();if(!val)return;
+  if(!ligas.includes(val))ligas.push(val);
+  inp.value="";
+  const cur=[...document.querySelectorAll("#liga-checks input:checked")].map(x=>x.value);
+  renderLigaChecks([...new Set([...cur,val])]);
+  saveAll();updateLigaFilter();
+}
+function openModal(id=null){
+  editingId=id;
+  const p=id?players.find(x=>x.id===id):null;
+  document.getElementById("modal-ttl").textContent=p?"Editar jugador":"Agregar jugador";
+  document.getElementById("f-name").value=p?.name||"";
+  document.getElementById("f-year").value=p?.year||"";
+  document.getElementById("f-country").value=p?.country||"";
+  document.getElementById("f-pos").value=p?.pos||"";
+  updateRoles();
+  if(p?.role)document.getElementById("f-role").value=p.role;
+  document.getElementById("f-nivel").value=p?.nivel||"Prioritario";
+  document.getElementById("f-informes").value=p?.informes||1;
+  document.getElementById("f-tm").value=p?.tm||"";
+  document.getElementById("f-notes").value=p?.notes||"";
+  renderLigaChecks(p?.ligas||["General"]);
+  document.getElementById("modal").style.display="flex";
+}
+function closeModal(){document.getElementById("modal").style.display="none";editingId=null;}
+function savePlayer(){
+  const name=document.getElementById("f-name").value.trim();
+  const pos=document.getElementById("f-pos").value;
+  const role=document.getElementById("f-role").value;
+  const nivel=document.getElementById("f-nivel").value;
+  if(!name||!pos||!role||!nivel){alert("Completá los campos obligatorios (*)");return;}
+  const selLigas=[...document.querySelectorAll("#liga-checks input:checked")].map(x=>x.value);
+  const data={name,pos,role,nivel,
+    year:+document.getElementById("f-year").value||"",
+    country:document.getElementById("f-country").value.trim(),
+    informes:+document.getElementById("f-informes").value||1,
+    tm:document.getElementById("f-tm").value.trim(),
+    notes:document.getElementById("f-notes").value.trim(),
+    ligas:selLigas.length?selLigas:["General"]
+  };
+  if(editingId){const idx=players.findIndex(p=>p.id===editingId);if(idx>=0)players[idx]={...players[idx],...data};}
+  else{data.id=Date.now()+Math.random();players.push(data);}
+  saveAll();closeModal();renderAll();
+  if(document.getElementById("section-dash").style.display!=="none")renderDash();
+}
+function deletePlayer(id){
+  if(!confirm("¿Eliminar este jugador?"))return;
+  players=players.filter(p=>p.id!==id);
+  saveAll();renderAll();
+}
+function editPlayer(id){openModal(id);}
+function exportCSV(){
+  const h=["Nombre","Año","País","Pos","Rol","Nivel","Ligas","Informes","TM","Notas"];
+  const rows=players.map(p=>[p.name,p.year,p.country,p.pos,p.role,p.nivel,(p.ligas||[]).join("|"),p.informes,p.tm,p.notes].map(v=>`"${(v||"").toString().replace(/"/g,'""')}"`));
+  const csv=[h.join(","),...rows.map(r=>r.join(","))].join("\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="InterMiami_DB.csv";a.click();
+}
+
+load();
+</script>
+</body>
+</html>
